@@ -1,0 +1,21 @@
+fn main() -> void {
+    if 5 > 2 {
+        println("pass")
+    }
+
+    if 5 < 2 {
+        unreachable()
+    }
+
+    if 5 == 0 {
+        unreachable()
+    }
+
+    if 5 == 5 {
+        println("pass")
+    }
+
+    if 5 <= 5 {
+        println("pass")
+    }
+}
