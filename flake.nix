@@ -21,6 +21,7 @@
         glibc.dev
         tinycc
         gnumake
+        valgrind-light
         # libc
 
         # git utilities

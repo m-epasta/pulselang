@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
     vector_str args = parse_arguments(argc, argv);
     if (args.size == 0) {
         repl();
+        return -1;
     }
     vector_string_free(args);
 }
@@ -30,7 +31,7 @@ vector_str parse_arguments(int argc, char* argv[]) {
         return arr;
     }
 
-    for (int i = 1; i <= argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "build") == 0) {
         } else if (strcmp(argv[i], "check") == 0) {
         } else if (strcmp(argv[i], "link") == 0) {
