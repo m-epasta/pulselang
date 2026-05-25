@@ -19,7 +19,7 @@ char* take_source_code(char* filepath) {
     long size = ftell(file);
     rewind(file);
     if (size < 0) {
-        fprintf(stderr, "ftell failed\n");
+        perror("ftell");
         exit(1);
     }
     char* buffer = malloc(size + 1);

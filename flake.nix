@@ -14,12 +14,18 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = with pkgs; [
+        # NOTE: Consider setting some programs like your editor into systemPackacges so you can access them while having a *lightweight* nix-shell
+
         clang-tools
         gcc
         glibc.dev
         tinycc
         gnumake
         # libc
+
+        # git utilities
+        gh
+        git
       ];
 
       shellHook = ''
