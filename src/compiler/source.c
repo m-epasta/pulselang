@@ -1,8 +1,10 @@
+#include "source.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define PATH_MAX 4096
+#include "lexer/lexer.h"
 
 char* take_source_code(char* filepath) {
     char abs_path[PATH_MAX];
@@ -31,4 +33,18 @@ char* take_source_code(char* filepath) {
     buffer[read_bytes] = '\0';
     fclose(file);
     return buffer;
+}
+
+/* UTILS */
+
+char* read_rel(char path[PATH_MAX]) {}
+
+/* DEBUG */
+
+void source_print_tokens(int debug_mode, char path[PATH_MAX]) {
+    if (!(debug_mode == -1 || debug_mode == 1)) {
+        return;
+    }
+
+    read_rel(path);
 }

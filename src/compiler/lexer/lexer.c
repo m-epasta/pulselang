@@ -285,6 +285,7 @@ TokenType match_char(char c, Scanner* scanner) {
 
         default:
             // TODO: Proper error handling
+            // Should it errors ? We may be able to do some linking on that ?
             fprintf(stderr, "%c: unknown char (lexeme)", c);
             return unknown;
     }

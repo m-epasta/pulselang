@@ -1,9 +1,14 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "../include/vector.h"
+#include "compiler/source.h"
 
+#define DEBUG_DIRECTIVE "LREPL.DIRECTIVE"
+
+static int debug = 0;
 static int rstate = 1;
 
 vector_str parse_arguments(int argc, char* argv[]);
@@ -13,9 +18,25 @@ void rpause(vector_str* code_buffer);
 static void cmd(const char* cmd);
 void help(void);
 
+#if !defined(__GNUC__) && !defined(__clang__)
+#error \
+    "Just why ? Please man stop suffering and install this frkin linux machine and shit on microslop"
+#endif
+
+#if (defined(__GNUC__) || defined(__clang__)) && !defined(__TCC__)
+#warning "Ignore the below statement if you are on linux"
+#warning \
+    "You may want TCC: tcc is tiny, faster and cheaper to compile although its optimizations are less aggressive, it is a good choice for critical systems" \
+    "since this language is intended to build low level systems, I highly reccommend you to use tcc instead of gnu or clang"
+#warning \
+    "To stop this message from displaying, simply pass -D__TCC__ (or alias it in your shell) or install it in your .so store (ld in nixOS). If your LSP still complains (if clangd)" \
+    "pass -D__TCC__ as compiler flag"
+#endif
+
 int main(int argc, char* argv[]) {
     vector_str args = parse_arguments(argc, argv);
-    if (args.size == 0) {
+    if (args.size == 0 ||
+        (args.size == 1 && strcmp(args.item[1], DEBUG_DIRECTIVE) == 0)) {
         repl();
         return -1;
     }
@@ -31,8 +52,18 @@ vector_str parse_arguments(int argc, char* argv[]) {
         return arr;
     }
 
+    if (strcmp(argv[1], "-g") == 0 && argc == 2) {
+        debug = 1;
+        vector_push(arr, DEBUG_DIRECTIVE);
+        return arr;
+    }
+
     for (int i = 1; i < argc; ++i) {
-        if (strcmp(argv[i], "build") == 0) {
+        if (strcmp(argv[1], "-g") == 1) {
+            debug = 1;
+            vector_push(arr, DEBUG_DIRECTIVE);
+            continue;
+        } else if (strcmp(argv[i], "build") == 0) {
         } else if (strcmp(argv[i], "check") == 0) {
         } else if (strcmp(argv[i], "link") == 0) {
         } else {
@@ -102,6 +133,12 @@ static void cmd(const char* cmd) {
         printf("not implemented\n");
     } else if (strcmp(cmd, "h") == 0) {
         help();
+    } else if (strcmp(cmd, "ptok") == 0) {
+        char path[PATH_MAX];
+        if (fgets(path, PATH_MAX, stdin) == NULL) {
+            perror("fgets 4096");
+        }
+        source_print_tokens(debug, path);
     } else {
         printf("Invalid command: %s\n", cmd);
     }
@@ -112,5 +149,10 @@ void help(void) {
     printf("Compile with :c\n");
     printf("Prints AST with :ast\n");
     printf("Exit with :q\n");
+    printf("\nDev specific commands: \n");
+    printf(
+        "\t:ptok prints tokens types based on a given file AS INPUT "
+        "read stdin as lang) - Useful for "
+        "debugging the lexer behaviour\n");
     printf("=========================\n");
 }
