@@ -5,9 +5,7 @@
 
 #include "lexer/lexer.h"
 
-/* debug_mode = -1 means all debug actions, debug_mode = 1 means only tokens
- * printing */
-void print_tokens(int debug_mode, Token** tokens, size_t size) {
+void print_tokens(Token** tokens, int size) {
     /* Does not store output, instead it prints it directly */
     int indent_level = 0;
     char curr_line[1024];

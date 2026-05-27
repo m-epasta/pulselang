@@ -3,6 +3,6 @@
 
 #include "lexer/lexer.h"
 
-void print_tokens(int debug_mode, Token* tokens[], size_t size);
+void print_tokens(Token* tokens[], int size);
 
 #endif  // !PRETTY_PRINT_H

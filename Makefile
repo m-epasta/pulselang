@@ -30,7 +30,7 @@ run: $(EXEC)
 EMBED_BUILD_DIR = $(BUILD_DIR)/tcc
 EMBED_EXEC = $(EMBED_BUILD_DIR)/main
 
-EMBED_CFLAGS = -Wall -Wextra -std=c23 -g
+EMBED_CFLAGS = -Wall -Wextra -std=c23 -g -D__TCC__
 
 EMBED_OBJS = $(patsubst $(SRC_DIR)/%.c, $(EMBED_BUILD_DIR)/%.o, $(SRCS))
 

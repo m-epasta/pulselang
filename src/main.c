@@ -18,19 +18,9 @@ void rpause(vector_str* code_buffer);
 static void cmd(const char* cmd);
 void help(void);
 
-#if !defined(__GNUC__) && !defined(__clang__)
+#if !defined(__GNUC__) && !defined(__clang__) && !defined(__TCC__)
 #error \
     "Just why ? Please man stop suffering and install this frkin linux machine and shit on microslop"
-#endif
-
-#if (defined(__GNUC__) || defined(__clang__)) && !defined(__TCC__)
-#warning "Ignore the below statement if you are on linux"
-#warning \
-    "You may want TCC: tcc is tiny, faster and cheaper to compile although its optimizations are less aggressive, it is a good choice for critical systems" \
-    "since this language is intended to build low level systems, I highly reccommend you to use tcc instead of gnu or clang"
-#warning \
-    "To stop this message from displaying, simply pass -D__TCC__ (or alias it in your shell) or install it in your .so store (ld in nixOS). If your LSP still complains (if clangd)" \
-    "pass -D__TCC__ as compiler flag"
 #endif
 
 int main(int argc, char* argv[]) {
@@ -136,7 +126,9 @@ static void cmd(const char* cmd) {
     } else if (strcmp(cmd, "ptok") == 0) {
         char path[PATH_MAX];
         if (fgets(path, PATH_MAX, stdin) == NULL) {
-            perror("fgets 4096");
+            fprintf(stderr,
+                    "Given filepath is too large (PATH_MAX = 4096), this path "
+                    "should not be possible.");
         }
         source_print_tokens(debug, path);
     } else {

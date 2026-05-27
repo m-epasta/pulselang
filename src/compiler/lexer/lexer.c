@@ -251,7 +251,7 @@ TokenType match_char(char c, Scanner* scanner) {
         case '%':
             return percent;
         case '|':
-            return pipe;
+            return pip;
         case '+':
             return plus;
         case '?':

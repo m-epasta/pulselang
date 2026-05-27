@@ -39,7 +39,7 @@ typedef enum {
     lparen,        // (
     minus,         // -
     percent,       // %
-    pipe,          // |
+    pip,           // | pipe moved to pip because of conflict on unistd
     plus,          // +
     question,      // ?
     rbrace,        // }
