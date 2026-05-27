@@ -34,5 +34,25 @@
         export CLANGD_FLAGS="--query-driver=${pkgs.gcc}/bin/gcc"
       '';
     };
+    packages.${system}.default = pkgs.stdenv.mkDerivation {
+      pname = "pulselang";
+      version = "0.1.0";
+      src = ./.;
+
+      nativeBuildInputs = with pkgs; [gnumake tinycc gcc];
+
+      buildInputs = with pkgs; [glibc.dev];
+
+      buildPhase = ''
+        make all
+        make embed
+      '';
+
+      installPhase = ''
+        mkdir -p $out/bin
+        cp build/main $out/bin/
+        cp build/tcc/main $out/bin/tmain
+      '';
+    };
   };
 }
