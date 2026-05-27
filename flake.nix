@@ -16,6 +16,7 @@
       buildInputs = with pkgs; [
         # NOTE: Consider setting some programs like your editor into systemPackacges so you can access them while having a *lightweight* nix-shell
 
+        # dev & build tools
         clang-tools
         gcc
         glibc.dev
@@ -23,10 +24,17 @@
         gnumake
         valgrind-light
         # libc
+        just
+        just-lsp
+        just-formatter
 
         # git utilities
         gh
         git
+
+        # debugging
+        gdb
+        gdbgui # You may want to just use normal gdb
       ];
 
       shellHook = ''
