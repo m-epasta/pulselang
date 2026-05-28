@@ -2,6 +2,7 @@
 
 e70883b:
     - [ ] Fix seg fault in tmain
+    - [ ] Add artifacts from compilation such as core files into .gitignore
 
 
 up:
