@@ -40,6 +40,8 @@ vector_str parse_arguments(int argc, char* argv[]) {
         arr.size = 0;
         vector_append_items(arr, argv + 1, argc - 1);
         return arr;
+    } else if (argc >= 1) {
+        return arr;
     }
 
     if (strcmp(argv[1], "-g") == 0 && argc == 2) {

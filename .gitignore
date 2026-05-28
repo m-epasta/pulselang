@@ -1,6 +1,9 @@
 main
 pulse
-
 build/
 result
+vgcore*
+core*
+
+# Tmp
 README.md
