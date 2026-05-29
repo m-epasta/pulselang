@@ -12,7 +12,7 @@ typedef struct {
 
 char scanner_get_char(Scanner* scanner);
 
-Scanner* scanner_new(Scanner* scanner);
+Scanner* scanner_new(Scanner* scanner, char* input);
 char scanner_current(Scanner* scanner);
 void scanner_bump(Scanner* scanner);
 void scanner_bumpnl(Scanner* scanner);
@@ -96,5 +96,10 @@ void tok_init(Token* tok);
 Token next(Scanner* scanner);
 TokenType match_lexeme(char* lexeme);
 TokenType match_char(char c, Scanner* scanner);
+
+#include "../../../include/vector.h"
+typedef Vector(Token*) vector_token;
+
+vector_token lex(char* source);
 
 #endif  // !LEXER_H

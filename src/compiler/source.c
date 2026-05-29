@@ -77,9 +77,10 @@ char* read_rel(char source_path[PATH_MAX]) {
         total += n;
     }
 
-    if (buf)
-        buf[total] = '\0';
-    else {
+    if (buf) {
+        buf[total] = EOF;
+        buf[total + 1] = '\0';
+    } else {
         buf = malloc(1);
         if (buf) buf[0] = '\0';
     }
@@ -103,4 +104,6 @@ void source_print_tokens(int debug_mode, char path[PATH_MAX]) {
         fprintf(stderr, "read_rel: %s is empty", path);
         return;
     }
+
+    lex(content);
 }

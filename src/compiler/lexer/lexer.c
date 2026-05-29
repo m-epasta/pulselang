@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-Scanner* scanner_new(Scanner* scanner) {
-    scanner->input = "";
+Scanner* scanner_new(Scanner* scanner, char* input) {
+    scanner->input = input;
     scanner->pos = 0;
     scanner->line = 0;
     scanner->col = 0;
@@ -292,3 +292,19 @@ TokenType match_char(char c, Scanner* scanner) {
 }
 
 #pragma endregion lexer
+
+vector_token lex(char* source) {
+    int idx = 0;
+    vector_token tokens = vector_new();
+    vector_init(tokens);
+    Scanner* scanner = NULL;
+    scanner_new(scanner, source);
+
+    do {
+        Token tok = next(scanner);
+        vector_push(tokens, &tok);
+        idx++;
+    } while (source[idx] != EOF);
+
+    return tokens;
+}
