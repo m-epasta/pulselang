@@ -1,8 +1,10 @@
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "../include/array_helpers.h"
 #include "../include/vector.h"
 #include "compiler/source.h"
 
@@ -15,8 +17,9 @@ vector_str parse_arguments(int argc, char* argv[]);
 void repl(void);
 int shouldNotClose(void);
 void rpause(vector_str* code_buffer);
-static void cmd(const char* cmd);
+static void repl_cmd(const char* cmd);
 void help(void);
+void parse_cmd(char* argv[], int i);
 
 #if !defined(__GNUC__) && !defined(__clang__) && !defined(__TCC__)
 #error \
@@ -50,16 +53,13 @@ vector_str parse_arguments(int argc, char* argv[]) {
         return arr;
     }
 
-    for (int i = 1; i < argc; ++i) {
-        if (strcmp(argv[1], "-g") == 1) {
-            debug = 1;
-            vector_push(arr, DEBUG_DIRECTIVE);
-            continue;
-        } else if (strcmp(argv[i], "build") == 0) {
-        } else if (strcmp(argv[i], "check") == 0) {
-        } else if (strcmp(argv[i], "link") == 0) {
-        } else {
-        }
+    if (strcmp(argv[1], "-g") == 1) {
+        debug = 1;
+        vector_push(arr, DEBUG_DIRECTIVE);
+    }
+
+    for (int i = 2; i <= argc; ++i) {
+        parse_cmd(argv, i);
     }
     return arr;
 }
@@ -102,7 +102,7 @@ void rpause(vector_str* code_buffer) {
     if (nread > 0 && line[nread - 1] == '\n') line[nread - 1] = '\0';
 
     if (line[0] == ':')
-        cmd(line + 1);
+        repl_cmd(line + 1);
     else if (strlen(line) > 0) {
         char* cp = strdup(line);
         if (cp) {
@@ -113,7 +113,7 @@ void rpause(vector_str* code_buffer) {
     free(line);
 }
 
-static void cmd(const char* cmd) {
+static void repl_cmd(const char* cmd) {
     if (strcmp(cmd, "q") == 0) {
         printf("exit\n");
         rstate = 0;
@@ -126,6 +126,7 @@ static void cmd(const char* cmd) {
     } else if (strcmp(cmd, "h") == 0) {
         help();
     } else if (strcmp(cmd, "ptok") == 0) {
+        // TODO: Fix this command
         char path[PATH_MAX];
         if (fgets(path, PATH_MAX, stdin) == NULL) {
             fprintf(stderr,
@@ -150,3 +151,5 @@ void help(void) {
         "debugging the lexer behaviour\n");
     printf("=========================\n");
 }
+
+void parse_cmd(char* argv[], int i) {}
