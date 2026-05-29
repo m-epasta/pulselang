@@ -1,0 +1,90 @@
+[
+  {
+    "arguments": [
+      "/nix/store/vr15iyyykg9zai6fpgvhcgyw7gckl78w-gcc-wrapper-14.3.0/bin/gcc",
+      "-I",
+      "include",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c23",
+      "-D_GNU_SOURCE",
+      "-g",
+      "-c",
+      "-I",
+      "/nix/store/gi4cz4ir3zlwhf1azqfgxqdnczfrwsr7-glibc-2.40-66-dev/include",
+      "-o",
+      "build/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/mepasta/Desktop/dev/pulselang",
+    "file": "/home/mepasta/Desktop/dev/pulselang/src/main.c",
+    "output": "/home/mepasta/Desktop/dev/pulselang/build/main.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/vr15iyyykg9zai6fpgvhcgyw7gckl78w-gcc-wrapper-14.3.0/bin/gcc",
+      "-I",
+      "include",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c23",
+      "-D_GNU_SOURCE",
+      "-g",
+      "-c",
+      "-I",
+      "/nix/store/gi4cz4ir3zlwhf1azqfgxqdnczfrwsr7-glibc-2.40-66-dev/include",
+      "-o",
+      "build/compiler/pretty_print.o",
+      "src/compiler/pretty_print.c"
+    ],
+    "directory": "/home/mepasta/Desktop/dev/pulselang",
+    "file": "/home/mepasta/Desktop/dev/pulselang/src/compiler/pretty_print.c",
+    "output": "/home/mepasta/Desktop/dev/pulselang/build/compiler/pretty_print.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/vr15iyyykg9zai6fpgvhcgyw7gckl78w-gcc-wrapper-14.3.0/bin/gcc",
+      "-I",
+      "include",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c23",
+      "-D_GNU_SOURCE",
+      "-g",
+      "-c",
+      "-I",
+      "/nix/store/gi4cz4ir3zlwhf1azqfgxqdnczfrwsr7-glibc-2.40-66-dev/include",
+      "-o",
+      "build/compiler/source.o",
+      "src/compiler/source.c"
+    ],
+    "directory": "/home/mepasta/Desktop/dev/pulselang",
+    "file": "/home/mepasta/Desktop/dev/pulselang/src/compiler/source.c",
+    "output": "/home/mepasta/Desktop/dev/pulselang/build/compiler/source.o"
+  },
+  {
+    "arguments": [
+      "/nix/store/vr15iyyykg9zai6fpgvhcgyw7gckl78w-gcc-wrapper-14.3.0/bin/gcc",
+      "-I",
+      "include",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c23",
+      "-D_GNU_SOURCE",
+      "-g",
+      "-c",
+      "-I",
+      "/nix/store/gi4cz4ir3zlwhf1azqfgxqdnczfrwsr7-glibc-2.40-66-dev/include",
+      "-o",
+      "build/compiler/lexer/lexer.o",
+      "src/compiler/lexer/lexer.c"
+    ],
+    "directory": "/home/mepasta/Desktop/dev/pulselang",
+    "file": "/home/mepasta/Desktop/dev/pulselang/src/compiler/lexer/lexer.c",
+    "output": "/home/mepasta/Desktop/dev/pulselang/build/compiler/lexer/lexer.o"
+  }
+]

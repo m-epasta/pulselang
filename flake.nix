@@ -22,8 +22,10 @@
         glibc.dev
         tinycc
         gnumake
+        bear
         valgrind-light
         # libc
+
         just
         just-lsp
         just-formatter
