@@ -15,3 +15,18 @@ clean-build:
     rm -rf buid/
     rm -f vgcore* core*
     ./scripts/nixclean.sh
+
+gcc-compile-cmd:
+    make clean
+    bear -- make
+
+# Recommend to use gcc instead (better diagnostics and debug hints)
+# You also do not have include/*.h lsp support (fails to retrieve header files)
+tcc-compile-cmd:
+    make embed_clean
+    bear -- make embed
+
+
+# CODEGEN
+gen-cli-codes ARGS="":
+    ./scripts/gen_clicodes.sh {{ARGS}}
