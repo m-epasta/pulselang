@@ -2,7 +2,7 @@ main
 pulse
 build/
 result
-vgcore*
+vgcore.*
 core*
 
 # Tmp
