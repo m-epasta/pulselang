@@ -1,9 +1,9 @@
-#include "../include/args.h"
+#include "args.h"
 
 #include <stdio.h>
-#include <string.h>
 
 #include "../include/vector.h"
+#include "compiler/source.h"
 
 int debug = 0;
 

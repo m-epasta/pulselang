@@ -5,6 +5,8 @@
 #include "args.h"
 #include "compiler/source.h"
 
+static int rstate = 1;
+
 void repl() {
     vector_str code_buffer = vector_new();
     vector_init(code_buffer);

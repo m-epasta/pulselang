@@ -2,7 +2,6 @@
 #define REPL_H
 
 #include "vector.h"
-static int rstate = 1;
 
 void repl(void);
 void rpause(vector_str* code_buffer);
