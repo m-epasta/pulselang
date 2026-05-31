@@ -90,7 +90,7 @@ void help(void) {
     printf("\nDev specific commands: \n");
     printf(
         "\t:ptok prints tokens types based on a given file AS INPUT "
-        "read stdin as lang) - Useful for "
+        "(read stdin as lang) - Useful for "
         "debugging the lexer behaviour\n");
     printf("=========================\n");
 }
