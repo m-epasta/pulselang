@@ -22,7 +22,7 @@ nix store delete "$store_path"
 exit_code=$?
 if [ $exit_code -ne 0 ]; then
     echo "nix failed to delete actual build store (exit code $exit_code)." >&2
-    read -p "Do you want to force deletion using --ignore-liveness? [Y/n] " response
+    read -p "Do you want to force deletion? [Y/n] " response
     case "$response" in
     [yY])
         sudo nix store delete --ignore-liveness "$store_path"

@@ -27,6 +27,26 @@ clean:
 run: $(EXEC)
 	./$(EXEC) $(ARGS)
 
+DEBUG_BUILD_DIR = $(BUILD_DIR)/debug
+DEBUG_EXEC = $(DEBUG_BUILD_DIR)/main
+DEBUG_OBJS = $(patsubst $(SRC_DIR)/%.c, $(DEBUG_BUILD_DIR)/%.o, $(SRCS))
+
+debug: CC = gcc
+debug: CFLAGS += -Og -DDEBUG
+debug: clean_debug $(DEBUG_EXEC)
+
+$(DEBUG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(INC) $(CFLAGS) -MMD -c $< -o $@
+
+$(DEBUG_EXEC): $(DEBUG_OBJS)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $^ -o $@
+
+clean_debug:
+	rm -rf $(DEBUG_BUILD_DIR)
+
+
 EMBED_BUILD_DIR = $(BUILD_DIR)/tcc
 EMBED_EXEC = $(EMBED_BUILD_DIR)/main
 
@@ -51,3 +71,22 @@ embed_clean:
 
 embed_run: embed
 	./$(EMBED_EXEC) $(ARGS)
+
+EMBED_DEBUG_BUILD_DIR = $(EMBED_BUILD_DIR)/debug
+EMBED_DEBUG_EXEC = $(EMBED_DEBUG_BUILD_DIR)/main
+EMBED_DEBUG_OBJS = $(patsubst $(SRC_DIR)/%.c, $(EMBED_DEBUG_BUILD_DIR)/%.o, $(SRCS))
+
+embed_debug: CC = tcc
+embed_debug: EMBED_CFLAGS += -Og -DDEBUG
+embed_debug: clean_embed_debug $(EMBED_DEBUG_EXEC)
+
+$(EMBED_DEBUG_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(INC) $(EMBED_CFLAGS) -c $< -o $@
+
+$(EMBED_DEBUG_EXEC): $(EMBED_DEBUG_OBJS)
+	@mkdir -p $(dir $@)
+	$(CC) $(EMBED_CFLAGS) $^ -o $@
+
+clean_embed_debug:
+	rm -rf $(EMBED_DEBUG_BUILD_DIR)

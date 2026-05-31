@@ -56,12 +56,17 @@
       buildPhase = ''
         make all
         make embed
+        make debug
+        make embed_debug
       '';
 
       installPhase = ''
         mkdir -p $out/bin
         cp build/main $out/bin/
         cp build/tcc/main $out/bin/tmain
+        mkdir -p $out/bin/debug
+        cp -r build/debug/main $out/bin/debug/main
+        cp -r build/tcc/debug $out/bin/debug/tmain
       '';
     };
   };

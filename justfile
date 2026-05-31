@@ -7,6 +7,8 @@ ci:
 build-all:
     make
     make embed
+    make debug
+    make embed_debug
 
 valgrind:
     ./scripts/val.sh
