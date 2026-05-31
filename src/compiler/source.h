@@ -1,6 +1,7 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
+#include "lexer/lexer.h"
 #define PATH_MAX 4096
 
 char* take_source_code(char* source_path);
@@ -9,6 +10,7 @@ char* take_source_code(char* source_path);
 char* read_rel(char source_file[PATH_MAX]);
 
 /* DEBUG */
-void source_print_tokens(int debug_mode, char path[PATH_MAX]);
+int source_print_tokens(int debug_mode, char path[PATH_MAX]);
+void tprinter(vector_token tokens);
 
 #endif  // !SOURCE_H

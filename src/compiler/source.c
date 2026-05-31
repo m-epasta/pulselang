@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "lexer/lexer.h"
+#include "vector.h"
 
 #define READ_CHUNK 4096
 
@@ -91,19 +92,28 @@ char* read_rel(char source_path[PATH_MAX]) {
 
 /* DEBUG */
 
-void source_print_tokens(int debug_mode, char path[PATH_MAX]) {
-    if (!(debug_mode == -1 || debug_mode == 1)) {
-        return;
+int source_print_tokens(int debug_mode, char path[PATH_MAX]) {
+    if (debug_mode == 1) {
+        return -1;
     }
 
     char* content = read_rel(path);
     if (content == NULL) {
         fprintf(stderr, "read_rel: failed to read file %s", path);
-        return;
+        return -1;
     } else if (content[0] == '\0') {
         fprintf(stderr, "read_rel: %s is empty", path);
-        return;
+        return -1;
     }
 
-    lex(content);
+    vector_token tokens = lex(content);
+
+    tprinter(tokens);
+    return 0;
+}
+
+void tprinter(vector_token tokens) {
+    printf("God is good");
+    printf("%s", vector_item(tokens, 1)->lexeme);
+    return;
 }
