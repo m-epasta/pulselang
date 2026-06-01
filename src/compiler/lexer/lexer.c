@@ -13,7 +13,10 @@ Scanner* scanner_new(Scanner* scanner, char* input) {
     return scanner;
 }
 
-char scanner_current(Scanner* scanner) { return scanner->input[scanner->pos]; }
+char scanner_current(Scanner* scanner) {
+    char c = scanner->input[scanner->pos];
+    return c == '\0' ? EOF : c;
+}
 
 void scanner_bump(Scanner* scanner) {
     char curr = scanner_current(scanner);
@@ -36,45 +39,51 @@ void scanner_bumpnl(Scanner* scanner) {
 }
 
 void scanner_skip(Scanner* scanner) {
-    char curr = scanner_current(scanner);
+    while (1) {
+        char curr = scanner_current(scanner);
 
-    if (curr == EOF)
-        return;
-    else if (curr == ' ' || curr == '\t' || curr == '\r')
-        scanner_bump(scanner);
-    else if (curr == '/') {
-        char next_ch = scanner->input[scanner->pos + 1];
-        if (next_ch == '/') {
-            scanner_bump(scanner);
-            scanner_bump(scanner);
-
-            char ch = scanner_current(scanner);
-            while (ch != EOF) {
-                if (ch == '\n') {
-                    return;
-                }
-
-                scanner_bump(scanner);
-            }
-        } else if (next_ch == '*') {
-            scanner_bump(scanner);
-            scanner_bump(scanner);
-
-            char ch = scanner_current(scanner);
-            while (ch != EOF) {
-                if (ch == '*' && scanner->input[scanner->pos + 1] == '/') {
-                    scanner_bump(scanner);
-                    scanner_bump(scanner);
-                    return;
-                }
-                scanner_bump(scanner);
-                ch = scanner_current(scanner);
-            }
-        } else {
+        if (curr == EOF)
             return;
-        }
-    } else
-        return;
+        else if (curr == ' ' || curr == '\t' || curr == '\r') {
+            scanner_bump(scanner);
+            continue;
+        } else if (curr == '/') {
+            char next_ch = scanner->input[scanner->pos + 1];
+            if (next_ch == '/') {
+                scanner_bump(scanner);
+                scanner_bump(scanner);
+
+                char ch = scanner_current(scanner);
+                while (ch != EOF) {
+                    if (ch == '\n') {
+                        return;
+                    }
+
+                    scanner_bump(scanner);
+                    ch = scanner_current(scanner);
+                }
+                return;
+            } else if (next_ch == '*') {
+                scanner_bump(scanner);
+                scanner_bump(scanner);
+
+                char ch = scanner_current(scanner);
+                while (ch != EOF) {
+                    if (ch == '*' && scanner->input[scanner->pos + 1] == '/') {
+                        scanner_bump(scanner);
+                        scanner_bump(scanner);
+                        return;
+                    }
+                    scanner_bump(scanner);
+                    ch = scanner_current(scanner);
+                }
+                return;
+            } else {
+                return;
+            }
+        } else
+            return;
+    }
 }
 
 char* scanner_slice(Scanner* scanner, size_t start, size_t end) {
@@ -113,7 +122,7 @@ Token next(Scanner* scanner) {
     if (current == '\n') {
         size_t nline = scanner->line;
         size_t ncol = scanner->col;
-        scanner_bumpnl(scanner);
+        scanner_bump(scanner);
         tok.col = ncol;
         tok.line = nline;
         tok.lexeme = strdup("\n");
@@ -123,7 +132,8 @@ Token next(Scanner* scanner) {
 
     if (isdigit(current)) {
         while (scanner_current(scanner) != EOF) {
-            if (isdigit(current) || current == '.' || current == '_')
+            char c = scanner_current(scanner);
+            if (isdigit(c) || c == '.' || c == '_')
                 scanner_bump(scanner);
             else
                 break;
@@ -138,7 +148,8 @@ Token next(Scanner* scanner) {
 
     if (isalpha(current) || current == '_') {
         while (scanner_current(scanner) != EOF) {
-            if (isalnum(current) || current == '_')
+            char c = scanner_current(scanner);
+            if (isalnum(c) || c == '_')
                 scanner_bump(scanner);
             else
                 break;
@@ -151,10 +162,71 @@ Token next(Scanner* scanner) {
         tok.line = line;
         tok.typ = typ;
         tok.lexeme = strdup(lexeme);
+        return tok;
     }
 
     scanner_bump(scanner);
-    TokenType typ = match_char(scanner_current(scanner), scanner);
+
+    TokenType typ;
+    switch (current) {
+        case '(': typ = lparen; break;
+        case ')': typ = rparen; break;
+        case '{': typ = lbrace; break;
+        case '}': typ = rbrace; break;
+        case '[': typ = lbracket; break;
+        case ']': typ = rbracket; break;
+        case '+': typ = plus; break;
+        case '-': {
+            if (scanner_current(scanner) == '>') { scanner_bump(scanner); typ = arrow; }
+            else typ = minus;
+            break;
+        }
+        case '*': typ = star; break;
+        case '/': {
+            if (scanner_current(scanner) == '/') { scanner_bump(scanner); typ = slash_slash; }
+            else typ = slash;
+            break;
+        }
+        case '%': typ = percent; break;
+        case '&': typ = ampersand; break;
+        case '|': typ = pip; break;
+        case '!': typ = bang; break;
+        case '?': typ = question; break;
+        case ':': typ = colon; break;
+        case ';': typ = semicolon; break;
+        case ',': typ = comma; break;
+        case '.': typ = dot; break;
+        case '=': {
+            char n = scanner_current(scanner);
+            if (n == '=') { scanner_bump(scanner); typ = equal_equal; }
+            else if (n == '>') { scanner_bump(scanner); typ = fat_arrow; }
+            else typ = equal;
+            break;
+        }
+        case '>': {
+            if (scanner_current(scanner) == '=') { scanner_bump(scanner); typ = greater_equal; }
+            else typ = greater;
+            break;
+        }
+        case '<': {
+            if (scanner_current(scanner) == '=') { scanner_bump(scanner); typ = less_equal; }
+            else typ = less;
+            break;
+        }
+        case '@': typ = attr; break;
+        case '#': typ = sharp; break;
+        case '$': typ = dollar; break;
+        case '^': typ = caret; break;
+        case '~': typ = tilde; break;
+        case '_': typ = underscore; break;
+        case '\\': typ = backslash; break;
+        case '\'': typ = single_quote; break;
+        case '"': typ = double_quote; break;
+        default:
+            fprintf(stderr, "%c: unknown char (lexeme)", current);
+            typ = unknown;
+            break;
+    }
 
     tok.col = col;
     tok.line = line;
@@ -164,26 +236,24 @@ Token next(Scanner* scanner) {
 }
 
 TokenType match_lexeme(char* lexeme) {
-    if (strcmp(lexeme, "const"))
+    if (strcmp(lexeme, "const") == 0)
         return CONST;
-    else if (strcmp(lexeme, "for"))
+    else if (strcmp(lexeme, "for") == 0)
         return FOR;
-    else if (strcmp(lexeme, "fn"))
+    else if (strcmp(lexeme, "fn") == 0)
         return FN;
-    else if (strcmp(lexeme, "if"))
+    else if (strcmp(lexeme, "if") == 0)
         return IF;
-    else if (strcmp(lexeme, "include"))
+    else if (strcmp(lexeme, "include") == 0)
         return INCLUDE;
-    else if (strcmp(lexeme, "return"))
+    else if (strcmp(lexeme, "return") == 0)
         return RETURN;
-    else if (strcmp(lexeme, "var"))
+    else if (strcmp(lexeme, "var") == 0)
         return VAR;
-    else if (strcmp(lexeme, "while"))
+    else if (strcmp(lexeme, "while") == 0)
         return WHILE;
-    else {
-        printf("%s: as ident", lexeme);
+    else
         return ident;
-    }
 }
 
 TokenType match_char(char c, Scanner* scanner) {
@@ -294,17 +364,17 @@ TokenType match_char(char c, Scanner* scanner) {
 #pragma endregion lexer
 
 vector_token lex(char* source) {
-    int idx = 0;
     vector_token tokens = vector_new();
     vector_init(tokens);
-    Scanner* scanner = NULL;
-    scanner_new(scanner, source);
+    Scanner scanner;
+    scanner_new(&scanner, source);
 
-    do {
-        Token tok = next(scanner);
-        vector_push(tokens, &tok);
-        idx++;
-    } while (source[idx] != EOF);
+    while (1) {
+        Token* tok = malloc(sizeof(Token));
+        *tok = next(&scanner);
+        vector_push(tokens, tok);
+        if (tok->typ == eof) break;
+    }
 
     return tokens;
 }
