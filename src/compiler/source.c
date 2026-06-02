@@ -1,13 +1,13 @@
 #include "source.h"
 
+#include "pretty_print.h"
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "lexer/lexer.h"
-#include "vector.h"
 
 #define READ_CHUNK 4096
 
@@ -107,137 +107,8 @@ int source_print_tokens(int debug_mode, char path[PATH_MAX]) {
 
     vector_token tokens = lex(content);
 
-    tprinter(tokens);
+    print_tokens(tokens.item, tokens.size);
     return 0;
 }
 
-static const char* token_type_str(TokenType typ) {
-    switch (typ) {
-        case ampersand:
-            return "&";
-        case attr:
-            return "@";
-        case backslash:
-            return "\\\\";
-        case bang:
-            return "!";
-        case caret:
-            return "^";
-        case colon:
-            return ":";
-        case comma:
-            return ",";
-        case dollar:
-            return "$";
-        case double_quote:
-            return "\"";
-        case dot:
-            return ".";
-        case equal:
-            return "=";
-        case greater:
-            return ">";
-        case lbrace:
-            return "{";
-        case lbracket:
-            return "[";
-        case less:
-            return "<";
-        case lparen:
-            return "(";
-        case minus:
-            return "-";
-        case percent:
-            return "%";
-        case pip:
-            return "|";
-        case plus:
-            return "+";
-        case question:
-            return "?";
-        case rbrace:
-            return "}";
-        case rbracket:
-            return "]";
-        case rparen:
-            return ")";
-        case sharp:
-            return "#";
-        case semicolon:
-            return ";";
-        case single_quote:
-            return "'";
-        case slash:
-            return "/";
-        case star:
-            return "*";
-        case tilde:
-            return "~";
-        case underscore:
-            return "_";
-        case arrow:
-            return "->";
-        case equal_equal:
-            return "==";
-        case slash_slash:
-            return "//";
-        case fat_arrow:
-            return "=>";
-        case greater_equal:
-            return ">=";
-        case less_equal:
-            return "<=";
-        case CONST:
-            return "const";
-        case FOR:
-            return "for";
-        case FN:
-            return "fn";
-        case IF:
-            return "if";
-        case INCLUDE:
-            return "include";
-        case RETURN:
-            return "return";
-        case VAR:
-            return "var";
-        case WHILE:
-            return "while";
-        case eof:
-            return "eof";
-        case nl:
-            return "nl";
-        case ident:
-            return "ident";
-        case Index:
-            // Techincally an integer
-            return "Int";
-        case unknown:
-            return "�";
-    }
-    return "�";
-}
 
-void tprinter(vector_token tokens) {
-    for (size_t i = 0; i < tokens.size; ++i) {
-        Token* tok = vector_item(tokens, i);
-
-        if (tok->typ == eof) {
-            printf("<eof>\n");
-            break;
-        }
-
-        if (tok->typ == nl) {
-            printf("\n");
-            continue;
-        }
-
-        printf("%s", token_type_str(tok->typ));
-
-        if (tok->lexeme && (tok->typ == ident || tok->typ == Index)) {
-            printf(":%s", tok->lexeme);
-        }
-
-        printf(" ");
-    }
-}
