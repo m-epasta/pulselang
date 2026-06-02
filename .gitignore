@@ -4,6 +4,7 @@ build/
 result
 vgcore.*
 core*
+.cache
 
 # Tmp
 README.md

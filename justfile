@@ -13,7 +13,8 @@ valgrind:
     ./scripts/val.sh
 
 clean-build:
-    rm -rf buid/
+    rm -rf build/
+    rm -rf integration_tests/.cache
     rm -f vgcore* core*
     ./scripts/nixclean.sh
 
@@ -31,3 +32,10 @@ tcc-compile-cmd:
 # CODEGEN
 gen-cli-codes ARGS="":
     ./scripts/gen_clicodes.sh {{ARGS}}
+
+
+# TESTS
+
+fuzz:
+    # Not verified, simply tests some features without checking on it
+    ./integration_tests/fuzz.sh
